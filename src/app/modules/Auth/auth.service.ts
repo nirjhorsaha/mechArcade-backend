@@ -5,7 +5,7 @@ import httpStatus from 'http-status';
 
 const loginUser = async (email: string, password: string) => {
   const user = await User.findOne({ email });
-console.log(user)
+
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
   }
