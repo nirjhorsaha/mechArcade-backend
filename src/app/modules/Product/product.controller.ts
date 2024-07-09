@@ -5,7 +5,7 @@ import noDataFound from '../../middlewares/noDataFound';
 import { ProductService } from './product.service';
 
 const createProduct = catchAsync(async (req, res) => {
-  const product = await ProductService.cretaProduct(req.body);
+  const product = await ProductService.createProduct(req.body);
 
   sendResponse(res, {
     success: true,
@@ -32,7 +32,7 @@ const getAllProducts = catchAsync(async (req, res) => {
 
 const getProductByID = catchAsync(async (req, res) => {
   const productId = req.params.id;
-  const product = await ProductService.getSingleProducts(productId);
+  const product = await ProductService.getSingleProduct(productId);
 
   if (!product) {
     return noDataFound(res);
@@ -50,7 +50,7 @@ const updateProduct = catchAsync(async (req, res) => {
   const productId = req.params.id;
   const updatedCourseData = req.body;
 
-  const existingProduct = await ProductService.getSingleProducts(productId);
+  const existingProduct = await ProductService.getSingleProduct(productId);
   if (!existingProduct) {
     return noDataFound(res);
   }
@@ -70,14 +70,14 @@ const updateProduct = catchAsync(async (req, res) => {
 
 const deleteProduct = catchAsync(async (req, res) => {
   const productId = req.params.id;
-  const existingProduct = await ProductService.getSingleProducts(productId);;
+  const existingProduct = await ProductService.getSingleProduct(productId);
 
   if (!existingProduct) {
     return noDataFound(res);
   }
 
   const deleteProduct = await ProductService.deleteProduct(productId);
-  
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -87,9 +87,9 @@ const deleteProduct = catchAsync(async (req, res) => {
 });
 
 export const ProductController = {
-    createProduct,
-    getAllProducts,
-    getProductByID,
-    updateProduct,
-    deleteProduct
+  createProduct,
+  getAllProducts,
+  getProductByID,
+  updateProduct,
+  deleteProduct,
 };

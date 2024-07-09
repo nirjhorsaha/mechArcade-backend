@@ -1,7 +1,7 @@
 import { Product } from './product..model';
 import { IProduct } from './product.interface';
 
-const cretaProduct = async (payload: IProduct): Promise<IProduct> => {
+const createProduct = async (payload: IProduct): Promise<IProduct> => {
   const product = await Product.create(payload);
   return product;
 };
@@ -10,7 +10,7 @@ const getAllProducts = async (): Promise<IProduct[]> => {
   return await Product.find({ isDeleted: false });
 };
 
-const getSingleProducts = async (id: string): Promise<IProduct | null> => {
+const getSingleProduct = async (id: string): Promise<IProduct | null> => {
   return await Product.findOne({ _id: id, isDeleted: false });
 };
 
@@ -31,9 +31,9 @@ const deleteProduct = async (id: string): Promise<IProduct | null> => {
 };
 
 export const ProductService = {
-  cretaProduct,
+  createProduct,
   getAllProducts,
-  getSingleProducts,
+  getSingleProduct,
   updateProduct,
   deleteProduct,
 };

@@ -12,7 +12,6 @@ app.use(cors());
 // Application routes
 app.use('/api', router);
 
-
 // Root route
 app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to the Mechanical Keyboard Shop.!');
