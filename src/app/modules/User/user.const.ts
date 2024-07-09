@@ -1,1 +1,1 @@
-// export const TRole = ['user', 'admin'];
+export const TRole = ['user', 'admin'];
