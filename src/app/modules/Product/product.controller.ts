@@ -16,9 +16,9 @@ const createProduct = catchAsync(async (req, res) => {
 });
 
 const getAllProducts = catchAsync(async (req, res) => {
-  const product = await ProductService.getAllProducts();
+  const product = await ProductService.getAllProducts(req.query);
 
-  if (product.length === 0) {
+  if (product.result.length === 0) {
     return noDataFound(res);
   }
 
