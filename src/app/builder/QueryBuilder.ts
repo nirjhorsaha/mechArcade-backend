@@ -9,8 +9,10 @@ class QueryBuilder<T> {
     this.query = query;
   }
 
-  search(searchableFields: string[]) {
+  // * Adds a search condition to the query based on the provided searchable fields.
+  search(searchableFields: string[] ) {
     const searchTerm = this?.query?.searchTerm;
+
     if (searchTerm) {
       this.modelQuery = this.modelQuery.find({
         $or: searchableFields.map(
@@ -21,12 +23,12 @@ class QueryBuilder<T> {
         ),
       });
     }
-
     return this;
   }
 
+  // * Filters the query by excluding specific fields and applying the remaining query object.
   filter() {
-    const queryObj = { ...this.query }; // copy
+    const queryObj = { ...this.query }; // Copy query object
 
     // Filtering
     const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
@@ -38,6 +40,7 @@ class QueryBuilder<T> {
     return this;
   }
 
+  // * Sorts the query results based on the provided sort string.
   sort() {
     const sort =
       (this?.query?.sort as string)?.split(',')?.join(' ') || '-createdAt';
@@ -46,6 +49,7 @@ class QueryBuilder<T> {
     return this;
   }
 
+  // * Paginates the query results based on the provided page and limit.
   paginate() {
     const page = Number(this?.query?.page) || 1;
     const limit = Number(this?.query?.limit) || 10;
@@ -56,6 +60,8 @@ class QueryBuilder<T> {
     return this;
   }
 
+  // * Selects specific fields to be returned in the query results.
+
   fields() {
     const fields =
       (this?.query?.fields as string)?.split(',')?.join(' ') || '-__v';
@@ -63,6 +69,7 @@ class QueryBuilder<T> {
     this.modelQuery = this.modelQuery.select(fields);
     return this;
   }
+  // * Calculates the total number of documents and the total number of pages.
   async countTotal() {
     const totalQueries = this.modelQuery.getFilter();
     const total = await this.modelQuery.model.countDocuments(totalQueries);
