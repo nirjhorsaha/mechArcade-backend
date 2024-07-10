@@ -1,10 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prefer-const */
 import QueryBuilder from '../../builder/QueryBuilder';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { Product } from './product..model';
 import { ProductSearchableFields } from './product.constant';
-import { IProduct } from './product.interface';
+import { CloudinaryResponse, IProduct } from './product.interface';
 
-const createProduct = async (payload: IProduct): Promise<IProduct> => {
+const createProduct = async (
+  payload: IProduct,
+  file: any,
+): Promise<IProduct> => {
+  const imageName = `${payload.brand}_${payload?.name}`;
+  const path = file?.path;
+  //send image to cloudinary
+  const { secure_url }: CloudinaryResponse = await sendImageToCloudinary(imageName, path);
+
+  payload.imageUrl = secure_url;
+
   const product = await Product.create(payload);
   return product;
 };

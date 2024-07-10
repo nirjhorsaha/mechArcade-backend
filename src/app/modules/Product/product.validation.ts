@@ -17,7 +17,10 @@ const CreateProductvalidtionSchema = z.object({
     description: z
       .string()
       .min(10, { message: 'Description must be at least 10 characters long' }),
-    imageUrl: z.string().url({ message: 'Image URL must be a valid URL' }),
+    imageUrl: z
+      .string()
+      .url({ message: 'Image URL must be a valid URL' })
+      .optional(),
     isDeleted: z.boolean(),
     inStock: z.boolean(),
   }),

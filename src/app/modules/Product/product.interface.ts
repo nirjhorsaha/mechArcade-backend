@@ -5,7 +5,11 @@ export interface IProduct {
   quantity: number;
   rating: number;
   description: string;
-  imageUrl: string;
+  imageUrl?: string;
   isDeleted: boolean;
   inStock: boolean;
+}
+
+export interface CloudinaryResponse {
+  secure_url: string;
 }

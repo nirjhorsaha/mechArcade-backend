@@ -30,7 +30,6 @@ const ProductSchema: Schema<IProduct> = new Schema(
     },
     imageUrl: {
       type: String,
-      required: true,
     },
     isDeleted: {
       type: Boolean,
