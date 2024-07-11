@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs';
 import multer from 'multer';
@@ -10,7 +11,10 @@ cloudinary.config({
   api_secret: config.cloudinary_api_secret,
 });
 
-export const sendImageToCloudinary = (imageName: string, path: string):Promise<CloudinaryResponse> => {
+export const sendImageToCloudinary = (
+  imageName: string,
+  path: string,
+): Promise<CloudinaryResponse> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       path,
