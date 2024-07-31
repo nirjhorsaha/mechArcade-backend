@@ -6,14 +6,14 @@ const ProductSchema: Schema<IProduct> = new Schema(
     name: {
       type: String,
       required: true,
+      unique: true,
     },
     brand: {
       type: String,
       required: true,
-      unique: true,
     },
     price: {
-      type: String,
+      type: Number,
       required: true,
     },
     quantity: {

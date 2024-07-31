@@ -5,7 +5,8 @@ import noDataFound from '../../middlewares/noDataFound';
 import { ProductService } from './product.service';
 
 const createProduct = catchAsync(async (req, res) => {
-  const product = await ProductService.createProduct(req.body, req.file);
+  // const product = await ProductService.createProduct(req.body, req.file);
+  const product = await ProductService.createProduct(req.body);
 
   sendResponse(res, {
     success: true,

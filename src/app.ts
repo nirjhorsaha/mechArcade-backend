@@ -6,8 +6,13 @@ import router from './app/routes';
 
 const app = express();
 
+app.use(
+  cors({
+    origin: ['http://localhost:5173', 'https://mech-arcade-backend.vercel.app'],
+    credentials: true,
+  }),
+);
 app.use(express.json());
-app.use(cors());
 
 // Application routes
 app.use('/api', router);
@@ -24,3 +29,12 @@ app.use(globalErrorHandler);
 app.use(notFound);
 
 export default app;
+
+// app.use(
+//   cors({
+//     origin: '*',
+//     methods: ['GET', 'POST'],
+//     credentials: true,
+//     // origin: ["http://localhost:5173", "https://mech-arcade-backend.vercel.app"],
+//   }),
+// );
