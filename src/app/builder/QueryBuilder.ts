@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FilterQuery, Query } from 'mongoose';
 
 class QueryBuilder<T> {
@@ -10,7 +11,7 @@ class QueryBuilder<T> {
   }
 
   // * Adds a search condition to the query based on the provided searchable fields.
-  search(searchableFields: string[] ) {
+  search(searchableFields: string[]) {
     const searchTerm = this?.query?.searchTerm;
 
     if (searchTerm) {
@@ -31,7 +32,15 @@ class QueryBuilder<T> {
     const queryObj = { ...this.query }; // Copy query object
 
     // Filtering
-    const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
+    const excludeFields = [
+      'searchTerm',
+      'sort',
+      'limit',
+      'page',
+      'fields',
+      'minPrice',
+      'maxPrice',
+    ];
 
     excludeFields.forEach((el) => delete queryObj[el]);
 
@@ -40,12 +49,23 @@ class QueryBuilder<T> {
     return this;
   }
 
+  filterByPrice() {
+    const minPrice = Number(this.query.minPrice) || 0;
+    const maxPrice = Number(this.query.maxPrice) || Infinity;
+    this.modelQuery = this.modelQuery.find({
+      price: { $gte: minPrice, $lte: maxPrice },
+    });
+    return this;
+  }
+
   // * Sorts the query results based on the provided sort string.
   sort() {
-    const sort =
-      (this?.query?.sort as string)?.split(',')?.join(' ') || '-createdAt';
-    this.modelQuery = this.modelQuery.sort(sort as string);
+    const sortField = (this?.query?.sort as string) || 'brand'; // Default sort field is 'price'
 
+    const isDescending = sortField.startsWith('-'); // If the sorting is descending
+
+    const field = isDescending ? sortField.substring(1) : sortField; // Remove the '-' if present to get the field name
+    this.modelQuery = this.modelQuery.sort({ [field]: isDescending ? 1 : -1 });
     return this;
   }
 
@@ -61,7 +81,6 @@ class QueryBuilder<T> {
   }
 
   // * Selects specific fields to be returned in the query results.
-
   fields() {
     const fields =
       (this?.query?.fields as string)?.split(',')?.join(' ') || '-__v';
@@ -87,3 +106,86 @@ class QueryBuilder<T> {
 }
 
 export default QueryBuilder;
+
+// import { Document, FilterQuery } from 'mongoose';
+
+// type QueryParams = {
+//   search?: string;
+//   filter?: Record<string, any>;
+//   sort?: string;
+//   page?: number;
+//   limit?: number;
+//   fields?: string;
+// };
+
+// class QueryBuilder<T extends Document> {
+//   private modelQuery: any;
+//   private params: QueryParams;
+
+//   constructor(query: any, params: QueryParams) {
+//     this.modelQuery = query;
+//     this.params = params;
+//   }
+
+//   // Handle search
+//   search(searchableFields: string[]): this {
+//     const searchTerm = this.params.search;
+//     if (searchTerm) {
+//       const searchQuery = {
+//         $or: searchableFields.map((field) => ({
+//           [field]: { $regex: searchTerm, $options: 'i' },
+//         })) as FilterQuery<T>[],
+//       };
+
+//       this.modelQuery = this.modelQuery.find(searchQuery);
+//     }
+//     return this;
+//   }
+
+//   // Handle filtering
+//   filter(): this {
+//     if (this.params.filter) {
+//       this.modelQuery = this.modelQuery.where(this.params.filter);
+//     }
+//     return this;
+//   }
+
+//   // Handle sorting
+//   sort(): this {
+//     if (this.params.sort) {
+//       const isDescending = this.params.sort.startsWith('-');
+//       const field = isDescending ? this.params.sort.substring(1) : this.params.sort;
+//       this.modelQuery = this.modelQuery.sort({ [field]: isDescending ? -1 : 1 });
+//     }
+//     return this;
+//   }
+
+//   // Handle pagination
+//   paginate(): this {
+//     const page = this.params.page || 1;
+//     const limit = this.params.limit || 10;
+//     const skip = (page - 1) * limit;
+//     this.modelQuery = this.modelQuery.skip(skip).limit(limit);
+//     return this;
+//   }
+
+//   // Handle field selection
+//   fields(): this {
+//     if (this.params.fields) {
+//       this.modelQuery = this.modelQuery.select(this.params.fields.split(',').join(' '));
+//     }
+//     return this;
+//   }
+
+//   // Execute the query
+//   get modelQueryResult(): Promise<T[]> {
+//     return this.modelQuery.exec();
+//   }
+
+//   // Get the total count of documents
+//   async countTotal(): Promise<number> {
+//     return this.modelQuery.model.countDocuments(this.modelQuery.getFilter()).exec();
+//   }
+// }
+
+// export default QueryBuilder;
