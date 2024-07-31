@@ -6,7 +6,7 @@ const CreateProductvalidtionSchema = z.object({
     brand: z
       .string()
       .max(50, { message: 'Brand name must not exceed 50 characters' }),
-    price: z.string().min(0, { message: 'Price must be a positive number' }),
+    price: z.number().min(0, { message: 'Price must be a positive number' }),
     quantity: z
       .number()
       .min(0, { message: 'Quantity must be a positive number' }),
@@ -37,7 +37,7 @@ const UpdateProductvalidtionSchema = z.object({
       .max(50, { message: 'Brand name must not exceed 50 characters' })
       .optional(),
     price: z
-      .string()
+      .number()
       .min(0, { message: 'Price must be a positive number' })
       .optional(),
     quantity: z
